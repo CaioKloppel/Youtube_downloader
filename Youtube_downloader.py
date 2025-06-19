@@ -1,5 +1,5 @@
 from pytubefix import YouTube
-from moviepy import VideoFileClip, AudioFileClip, CompositeAudioClip
+from moviepy.editor import VideoFileClip, AudioFileClip, CompositeAudioClip
 import os
 import re
 
@@ -33,12 +33,10 @@ if Programa.lower() == "video":
             video = yt.streams.filter(adaptive=True).filter(mime_type='video/webm').first()
             audio = yt.streams.filter(only_audio=True)[0]
 
-            video_path = os.path.join(pasta, "video.mp4")
             print("Downloading video...")
-            video_baixado = video.download(output_path=pasta, filename=f"Video.mp4")
-            audio_path = os.path.join(pasta, "audio.mp3")
+            video_baixado = video.download(output_path=pasta, filename="Video.mp4")
             print("Downloading audio...")
-            audio_baixado = audio.download(output_path=pasta, filename=f"Audio.mp3")
+            audio_baixado = audio.download(output_path=pasta, filename="Audio.mp3")
 
             output_path = os.path.join(pasta, f"{name}.mp4")
 
@@ -48,8 +46,8 @@ if Programa.lower() == "video":
             final_audio = CompositeAudioClip([audio_clip])
             final_clip = video_clip.with_audio(final_audio)
             final_clip.write_videofile(output_path, codec="libx264", audio_codec="aac")
-            os.remove(video_path)
-            os.remove(audio_path)
+            os.remove(video_baixado)
+            os.remove(audio_baixado)
             isValid = True
 
         except Exception as e:
@@ -68,6 +66,6 @@ else:
             print("Download audio...")
             audio.download(output_path=pasta, filename=f"{name}.mp3")
             isValid = True
-        except:
+        except Exception:
             print("Invalid url.")
             print("Tente novamente.")
